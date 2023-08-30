@@ -12,19 +12,26 @@ export const setupPlot = (element: HTMLDivElement, data: any[]) => {
 
   const g = svg.append("g");
 
+  const linearScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(data, (d) => d.value)])
+    .range([height, 0]);
+
+  const pointScale = d3
+    .scalePoint()
+    .domain(data.map((d) => d.value))
+    .range([0, width]);
+
+  // Define an axis group for positioning
+  const axisG = g.append("g").style("transform", `translateY(${height}px)`);
+  // Create axis with scale
+  const axis = d3.axisTop(pointScale);
+
   const updateData = () => {
-    // Create a scale
-    const linearScale = d3
-      .scaleLinear()
-      .domain([0, d3.max(data, (d) => d.value)])
-      .range([height, 0]);
+    // Update scale domains
+    linearScale.domain([0, d3.max(data, (d) => d.value)]);
+    pointScale.domain(data.map((d) => d.value));
 
-    const pointScale = d3
-      .scalePoint()
-      .domain(data.map((d) => d.value))
-      .range([0, width]);
-
-    // Use the scale when defining attributes
     g.selectAll("circle")
       .data(data, (d: any) => d.id)
       .join("circle")
@@ -32,6 +39,9 @@ export const setupPlot = (element: HTMLDivElement, data: any[]) => {
       .attr("cy", (d) => linearScale(d.value))
       .attr("r", (d) => d.value * 0.2)
       .attr("fill", "rgba(180, 40, 255, 0.2)");
+
+    // Call the axis to update to current scale
+    axisG.call(axis);
   };
 
   updateData();
