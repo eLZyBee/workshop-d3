@@ -108,6 +108,8 @@ button:focus-visible {
 }
 
 #dataview {
+  text-align: left;
   max-width: 60vw;
   margin: auto;
+  height: 40px;
 }

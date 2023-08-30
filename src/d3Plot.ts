@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-export const setupPlot = (element: HTMLDivElement, data: number[]) => {
+export const setupPlot = (element: HTMLDivElement, data: any[]) => {
   const { width, height } = element.getBoundingClientRect();
 
   const svg = d3
@@ -14,6 +14,11 @@ export const setupPlot = (element: HTMLDivElement, data: number[]) => {
 
   const updateData = () => {
     // Your code here
+    // Bind data to a selection
+
+    // Enter the selection
+
+    // Exit the selection
   };
 
   updateData();
