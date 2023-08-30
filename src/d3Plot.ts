@@ -13,34 +13,25 @@ export const setupPlot = (element: HTMLDivElement, data: any[]) => {
   const g = svg.append("g");
 
   const updateData = () => {
-    // Your code here
-    // Or just join
+    // Create a scale
+    const linearScale = d3
+      .scaleLinear()
+      .domain([0, d3.max(data, (d) => d.value)])
+      .range([height, 0]);
+
+    const pointScale = d3
+      .scalePoint()
+      .domain(data.map((d) => d.value))
+      .range([0, width]);
+
+    // Use the scale when defining attributes
     g.selectAll("circle")
       .data(data, (d: any) => d.id)
       .join("circle")
-      .attr("cx", (d, i) => d.value + 20 * i)
-      .attr("cy", (d) => d.value)
+      .attr("cx", (d) => pointScale(d.value)!)
+      .attr("cy", (d) => linearScale(d.value))
       .attr("r", (d) => d.value * 0.2)
-      .attr("fill", "blue");
-
-    // Or join more explicitly
-    g.selectAll("rect")
-      .data(data, (d: any) => d.id)
-      .join(
-        //@ts-ignore
-        (enter) => {
-          enter
-            .append("rect")
-            .attr("x", (d, i) => d.value + 20 * i)
-            .attr("y", (d) => d.value + 100);
-        },
-        (update) =>
-          update
-            .attr("width", (d) => d.value * 0.4)
-            .attr("height", (d) => d.value * 0.4)
-            .attr("fill", "gold"),
-        (exit) => exit.remove()
-      );
+      .attr("fill", "rgba(180, 40, 255, 0.2)");
   };
 
   updateData();
