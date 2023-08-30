@@ -14,22 +14,33 @@ export const setupPlot = (element: HTMLDivElement, data: any[]) => {
 
   const updateData = () => {
     // Your code here
-    // Bind data to a selection
-    const circles = g.selectAll("circle").data(data, (d: any) => d.id);
-
-    // Enter the selection
-    circles
-      .enter()
-      .append("circle")
+    // Or just join
+    g.selectAll("circle")
+      .data(data, (d: any) => d.id)
+      .join("circle")
       .attr("cx", (d, i) => d.value + 20 * i)
       .attr("cy", (d) => d.value)
       .attr("r", (d) => d.value * 0.2)
       .attr("fill", "blue");
-      
-    // Exit the selection
-    circles.exit().remove();
-    
-    // Merge the selection to make updates
+
+    // Or join more explicitly
+    g.selectAll("rect")
+      .data(data, (d: any) => d.id)
+      .join(
+        //@ts-ignore
+        (enter) => {
+          enter
+            .append("rect")
+            .attr("x", (d, i) => d.value + 20 * i)
+            .attr("y", (d) => d.value + 100);
+        },
+        (update) =>
+          update
+            .attr("width", (d) => d.value * 0.4)
+            .attr("height", (d) => d.value * 0.4)
+            .attr("fill", "gold"),
+        (exit) => exit.remove()
+      );
   };
 
   updateData();
