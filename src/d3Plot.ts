@@ -22,6 +22,11 @@ export const setupPlot = (element: HTMLDivElement, data: any[]) => {
     .domain(data.map((d) => d.value))
     .range([0, width]);
 
+  const timeScale = d3
+    .scaleTime()
+    .domain(d3.extent(data.map((d) => d.date)) as any)
+    .range([height, 0]);
+
   // Define an axis group for positioning
   const axisG = g.append("g").style("transform", `translateY(${height}px)`);
   // Create axis with scale
@@ -39,6 +44,14 @@ export const setupPlot = (element: HTMLDivElement, data: any[]) => {
       .attr("cy", (d) => linearScale(d.value))
       .attr("r", (d) => d.value * 0.2)
       .attr("fill", "rgba(180, 40, 255, 0.2)");
+
+    g.selectAll("rect")
+      .data(data, (d: any) => d.id)
+      .join("rect")
+      .attr("y", (d) => timeScale(d.date))
+      .attr("width", `${innerWidth}px`)
+      .attr("height", "1px")
+      .attr("fill", "rgba(255, 40, 25, 0.2)");
 
     // Call the axis to update to current scale
     axisG.call(axis);

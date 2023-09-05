@@ -4,11 +4,13 @@ import "./style.css";
 let data: any[] = [];
 
 const createId = () => Math.random().toString(16).substring(2);
-const generateValue = () => Math.round(Math.random() * 100) + 20;
+const generateValue = (range = [20, 100]) =>
+  Math.round(Math.random() * range[1]) + range[0];
 
 const generateData = () => ({
   id: createId(),
   value: generateValue(),
+  date: new Date(generateValue([946684800000, 1693814221804])),
 });
 
 for (let index = 0; index < 3; index++) {
@@ -58,12 +60,12 @@ const onUpdate = () => {
   update();
 };
 const onReset = () => {
-  const dataLength = data.length
+  const dataLength = data.length;
   for (let index = 3; index < dataLength; index++) {
     data.shift();
   }
   update();
-}
+};
 
 document
   .querySelector<HTMLButtonElement>("#add")!
